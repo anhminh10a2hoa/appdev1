@@ -1,7 +1,7 @@
 // constants definitions
 #define RATE 16000
-#define DUR 5
-#define RCMD "arecord -r16000 -c1 -f S16_LE -d5 -q test.wav"
+#define DUR 1
+#define RCMD "arecord -r16000 -c1 -f S16_LE -d1 -q test.wav"
 // data structures
 struct WAVHDR{
 	char ChunkID[4];		// must be "RIFF"
