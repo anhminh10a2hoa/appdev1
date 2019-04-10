@@ -2,7 +2,7 @@
 #include <math.h>
 #include "sound.h"
 #include "screen.h"
-int peak;
+
 void showID(char *idname,char *id){
 	int i;
 	printf("%s : ", idname);
@@ -14,6 +14,20 @@ void showID(char *idname,char *id){
 // this function gets one second of samples (16000), and calculates
 // 80 pieces of decibel value, we know we need to calculate one decibel
 // value from 200 samples, decibel value is calculated by RMS fromula
+
+
+// this function is only called by displayWAVDATA(), so no need to put
+// a declaration in sound.h. The function finds how many peaks from
+// 80 pieces of decibel values
+int findPeaks(int d[]){
+    int c = 0, i;
+    for(i=1; i<80; i++){
+        if(d[i] >= 75 && d[i-1] < 75) c++;
+    }
+    if(d[0] >= 75) c++;
+    return c;
+}
+
 void displayWAVDATA(short s[]){
 	double rms[80];
 	int dB[80];			// used to send decibel values to barchart
@@ -32,14 +46,16 @@ void displayWAVDATA(short s[]){
 		printf("rms[%d] = %f\n", i, rms[i]);
 #endif
 		dB[i] = 20*log10(rms[i]);
-	//	if(dB[i]>dB[i+1] && dB[i]>dB[i-1] && dB[i]>80){
-			for(peak=0;dB[i]<dB[i+1] && dB[i]>dB[i-1] && dB[i]>80; peak++){
-				if(i==79){peak=0;}}
 	}
 #ifndef DEBUG
 	barChart(dB);
+	int peaks = findPeaks(dB);
+	setColors(WHITE, bg(BLACK));
+	printf("\033[1;61H");
+	printf("Peaks: %d            \n",peaks);
 #endif
 }
+
 void displayWAVHDR(struct WAVHDR h){
 #ifdef DEBUG
 	showID("ChunkID", h.ChunkID);
@@ -58,16 +74,13 @@ void displayWAVHDR(struct WAVHDR h){
 #else
 	setColors(WHITE, bg(RED));
 	printf("\033[1;1H");
-	printf("test.wav");
+	printf("test.wav            ");
 	setColors(YELLOW, bg(BLUE));
-	printf("\033[1;10H");
-	printf("sample rate:%d",h.SampleRate);
+	printf("\033[1;21H");
+	printf("Sample rate:%dHz    ",h.SampleRate);
 	setColors(CYAN, bg(MAGENTA));
-	printf("\033[1;30H");
-	printf("Duration:%.2fsec	",(float)h.Subchunk2Size/h.ByteRate);
-	setColors(WHITE, bg(RED));
-	printf("\033[1;55H");
-	printf("Peaks:%d times",peak);
-//	setColors(RED, bg(BLACK));
+	printf("\033[1;41H");
+	printf("Duration:%.2fsec    ",(float)h.Subchunk2Size/h.ByteRate);
+	setColors(RED, bg(YELLOW));
 #endif
 }
