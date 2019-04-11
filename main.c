@@ -4,7 +4,30 @@
 #include <signal.h>
 #include "sound.h"
 #include "comm.h"
-int main(){
+int main(int argc, char **argv[]){
+	if(argc > 1){		// if the user has given some command line argument
+		printf("Test tone generation\n");
+		int fR, fL, ch;
+		float duration;
+		printf("No .of channels (1 or 2): ");
+		scanf("%d", &ch);
+		if(ch == 1){
+			printf("Mono Frequency: ");
+			scanf("%d", &fL);
+		}
+		else if(ch == 2){
+			printf("Give me Left and Right freq: ");
+			scanf("%d %d", &fL, &fR);
+		}
+		else {
+			printf("Wrong number of channels\n");
+			return 1;
+		}
+		printf("Duration of sound: ");
+		scanf("%f", &duration);
+		testTone(ch, fL, fR, duration);
+		return 0;
+	}
 	FILE *f;
 	short sd[RATE];
 	for(;;){
