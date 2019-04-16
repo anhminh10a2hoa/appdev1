@@ -1,1 +1,14 @@
-# This is application development ver1
+# This is application development ver 1.1 ----- by Hoang Anh Minh
+
+This application offers a possibility to turn a Raspberry Pi as a sound 
+device. The application comes with 2 functions: a sound collector and a
+test tone generator
+
+List of content
+	1. Configuration Instruction
+	2. Installation Instruction
+	3. Operating Instruction
+	4. List of Files
+	5. Copyright / Copyleft
+	6. Contact Info.
+	7. Credits and Acknowledgements
